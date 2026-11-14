@@ -1,0 +1,31 @@
+Grupo: [completar número verdadero del grupo]
+Integrantes: [completar tres integrantes]
+Actividad 3 - Entrega 1 - Asesoría de avances
+
+Título: Detección de fallas APS en camiones Scania mediante PCA
+Algoritmo: PCA como preprocesamiento + regresión logística para clasificación
+Problema: clasificar si una falla registrada se relaciona con el sistema APS
+Dataset: UCI APS Failure at Scania Trucks, dataset 421
+Registros originales de entrenamiento: 60.000 (documentación fuente)
+Atributos de entrada: 170 (documentación fuente)
+Valores ausentes: [COMPLETAR CON INFORME_AVANCE_REAL.txt]
+
+URL de repositorio GitHub público: https://github.com/JuanFer2004/Actividad3
+
+Estado del modelo:
+- Modelo entrenado: PENDIENTE DE EJECUCIÓN CON DATOS REALES
+- Modelo serializado: models/modelo_pca_scania.joblib (SE GENERA TRAS ENTRENAR)
+- Accuracy: [COMPLETAR CON RESULTADO REAL]
+- Recall: [COMPLETAR CON RESULTADO REAL]
+- Precisión: [COMPLETAR CON RESULTADO REAL]
+- Varianza explicada por PCA: [COMPLETAR CON RESULTADO REAL]
+
+Estado de la aplicación:
+- Framework: Streamlit
+- Código fuente: app/app.py
+- Prueba local: PENDIENTE DE EJECUTAR Y TOMAR CAPTURAS
+- Evidencias: AÑADIR CAPTURAS REALES DEL PC
+
+Despliegue planificado:
+- Servicio: Streamlit Community Cloud
+- Estado: por realizar en la Entrega 2
