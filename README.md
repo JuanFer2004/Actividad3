@@ -1,118 +1,145 @@
-# PCA aplicado a fallas en camiones Scania — Asesoría de avances
+# Detección de fallas en camiones Scania mediante PCA
 
-Proyecto académico de Inteligencia Artificial I (Actividad 3, Entrega 1).
+## Nuestro proyecto
 
-**Problema.** A partir de señales operativas reales y anonimizadas de camiones Scania, clasificar si un fallo está relacionado con el sistema de presión de aire (APS). El conjunto no permite diagnosticar una avería concreta en un camión particular. El sistema solo clasifica registros en la categoría `pos` (fallo relacionado con APS) o `neg` (fallo en otro componente).
+En este proyecto estamos desarrollando una aplicación que nos ayude a identificar si una falla registrada en un camión Scania está relacionada con el sistema de presión de aire, conocido como **APS**
 
-**Método principal:** análisis de componentes principales (**PCA**). PCA no es un clasificador: reduce las dimensiones de los indicadores tras limpiarlos y estandarizarlos. Un clasificador de regresión logística usa después las componentes principales para hacer la predicción. **No** se usa Random Forest, Titanic ni datos sintéticos.
+Queremos trabajar con información de un caso real y entender cómo preparar los datos para que un modelo de aprendizaje automático pueda utilizarlos de manera adecuada
 
-**Datos públicos REALES:** [APS Failure at Scania Trucks — UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) (DOI 10.24432/C51S51). Entrenamiento oficial: 60.000 registros, 170 atributos de entrada; 59.000 negativos y 1.000 positivos. Archivo de prueba independiente: 16.000 registros. Los datos reales incluyen numerosos valores faltantes indicados por `na`. Sus columnas están anonimizadas por Scania, por lo que sería incorrecto atribuirles nombres de sensores específicos.
+El resultado se presenta en dos categorías
 
-## ¿Qué se hace con los datos?
+- **APS (`pos`)**: la falla registrada está relacionada con el sistema de presión de aire
+- **No APS (`neg`)**: la falla registrada corresponde a otro componente
 
-1. Se descargan los dos CSV originales de UCI, sin inventar datos.
-2. Se revisan número de registros, valores faltantes, variables y filas duplicadas completas.
-3. Se divide estratificadamente el archivo oficial de entrenamiento en 80 % entrenamiento y 20 % validación.
-4. En los registros de **entrenamiento**, se aprenden qué columnas tienen menos del 50 % de ausencias. En las columnas conservadas, los faltantes se imputan con la mediana y las variables se estandarizan. Esto se hace en un `Pipeline` para evitar filtrar información de validación.
-5. PCA reduce el conjunto a **20 componentes principales**; se calcula cuánta varianza explican realmente.
-6. Una regresión logística con ponderación de clases clasifica a partir de esas 20 componentes. Se informan accuracy, precision, recall, F1, ROC AUC y costo de equivocaciones (10 por falsa alarma y 500 por omitir falla APS).
-7. Se guarda el pipeline **entero** en `models/modelo_pca_scania.joblib`, junto con las métricas reales en `models/metricas.json`.
-8. Se usa una aplicación Streamlit local que permite elegir casos REALES del archivo de prueba y cambiar al menos 3 indicadores anonimizados para explorar escenarios.
+La aplicación es una herramienta de análisis académico y su resultado no reemplaza una revisión técnica del vehículo
 
-## Instrucciones fáciles para Windows (primera ejecución)
+## ¿Por qué usamos PCA?
 
-Requisito: **Python 3.11** instalado desde https://www.python.org/downloads/ (en el instalador marcar **Add Python to PATH**). Requiere internet **la primera vez**, para instalar paquetes y descargar los CSV públicos (~54 MB comprimidos). No necesita AWS ni nube en la primera asesoría.
+Elegimos el **Análisis de Componentes Principales (PCA)** porque el conjunto de datos tiene muchas variables y queremos estudiar cómo podemos reducirlas conservando parte importante de su información
 
-1. Descomprime el ZIP del proyecto en tu PC, por ejemplo en `Documentos\pca-camiones`.
-2. Haz doble clic en **`EJECUTAR_PRIMERA_PRUEBA.bat`**.
-3. El programa instalará dependencias, descargará datos auténticos de UCI, limpiará los datos, entrenará PCA y el clasificador, creará el `.joblib` y abrirá una página de Streamlit (habitualmente `http://localhost:8501`).
-4. En la aplicación selecciona *Ejemplo A*, pulsa **Analizar registro** y toma una captura. Repite con *Ejemplo B*.
-5. Abre la sección **¿Qué limpieza de datos se hizo?** y toma una captura que muestre las cifras reales.
-6. Abre `docs/INFORME_AVANCE_REAL.txt`, generado **después** del entrenamiento, para copiar cifras reales a tu informe.
-7. Las veces siguientes puedes abrir **`INICIAR_EN_WINDOWS.bat`** para iniciar la app sin reentrenar.
+Primero organizamos y limpiamos los registros, después aplicamos PCA para representar los datos en **20 componentes principales** y finalmente utilizamos una regresión logística para hacer la clasificación
 
-Si tu versión instalada de Python no es 3.11, puedes usar la ejecución manual indicada abajo con `py -3.12` o la versión compatible que tengas.
+Es importante distinguir las dos tareas: **PCA reduce la cantidad de variables y la regresión logística realiza la predicción**
 
-### Opción manual desde PowerShell / terminal de VS Code
+## Datos con los que trabajamos
 
-Entra en la carpeta principal y ejecuta, uno a uno:
+Utilizamos el conjunto **APS Failure at Scania Trucks**, publicado en el repositorio UCI Machine Learning Repository
 
-```powershell
+| Característica | Información |
+|---|---|
+| Procedencia | Scania, a través de UCI |
+| Registros de entrenamiento originales | 60.000 |
+| Registros de prueba adicionales | 16.000 |
+| Variables de entrada | 170 |
+| Tipo de información | Variables numéricas anonimizadas y una categoría de falla |
+| Fuente | [Consultar el conjunto de datos en UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) |
+
+En los archivos originales encontramos valores ausentes identificados como `na`, por eso una parte importante del trabajo consiste en revisar y preparar la información antes del entrenamiento
+
+Los nombres de las variables están anonimizados, así que no podemos afirmar que cada columna corresponda a un sensor específico
+
+## ¿Cómo estamos trabajando los datos?
+
+Nuestro proceso está organizado en estas etapas
+
+1. **Descarga:** obtenemos los archivos originales desde UCI
+2. **Revisión:** comprobamos cuántos registros y variables tenemos, además de los datos faltantes y posibles duplicados
+3. **Separación:** reservamos el 20 % de los datos de entrenamiento para validar los resultados y usamos el 80 % restante para ajustar el modelo
+4. **Limpieza:** identificamos las columnas con demasiados valores ausentes y rellenamos los faltantes de las columnas conservadas con la mediana
+5. **Preparación:** estandarizamos las variables para que sus escalas sean comparables
+6. **PCA:** reducimos las variables a 20 componentes y calculamos cuánta información conservan
+7. **Clasificación:** entrenamos una regresión logística y evaluamos sus resultados
+8. **Aplicación:** utilizamos el modelo guardado para analizar registros desde una interfaz sencilla
+
+Para revisar la calidad del modelo calculamos métricas como precisión, recall, F1 y accuracy, además de la matriz de confusión
+
+El conjunto tiene más casos de la categoría `neg` que de `pos`, así que también prestamos atención a las fallas que el sistema podría pasar por alto
+
+**Los valores de las métricas se obtienen al ejecutar el entrenamiento**, no aparecen como resultados definitivos en este documento
+
+## ¿Qué hace cada archivo?
+
+Esta es la estructura del repositorio y la función de sus archivos principales
+
+| Archivo o carpeta | Para qué lo usamos |
+|---|---|
+| `README.md` | Explica el proyecto, los datos y la forma de ejecutarlo |
+| `LICENSE` | Contiene la licencia MIT del repositorio |
+| `requirements.txt` | Incluye las bibliotecas de Python necesarias |
+| `.gitignore` | Evita subir archivos temporales y datos locales innecesarios |
+| `EJECUTAR_PRIMERA_PRUEBA.bat` | Prepara el entorno en Windows, descarga los datos, entrena el modelo y abre la aplicación |
+| `INICIAR_EN_WINDOWS.bat` | Abre la aplicación cuando ya ejecutamos la primera prueba |
+| `entrenar.py` | Realiza la limpieza dentro del proceso de entrenamiento, aplica PCA, evalúa el modelo y guarda los resultados |
+| `scripts/descargar_datos.py` | Descarga los dos conjuntos originales desde UCI |
+| `src/preprocessing.py` | Contiene funciones para leer los CSV, revisar valores faltantes y seleccionar columnas |
+| `src/__init__.py` | Permite organizar las funciones de apoyo como un módulo de Python |
+| `notebooks/01_training.ipynb` | Nos permite explorar los datos y revisar el entrenamiento paso a paso en Jupyter |
+| `app/app.py` | Contiene la interfaz de Streamlit para analizar los registros |
+| `data/raw/` | Guarda los CSV originales después de descargarlos |
+| `data/processed/` | Carpeta reservada para datos procesados |
+| `models/` | Guarda el modelo entrenado y el resumen de las métricas después de ejecutarlo |
+| `docs/GRUPO_Actividad3_ASESORIA.txt` | Es nuestra plantilla con la información del avance del equipo |
+
+Dentro de `models/` se generan dos archivos importantes al entrenar
+
+- `modelo_pca_scania.joblib`: guarda el proceso de preparación de datos, PCA y clasificación para volver a utilizarlo
+- `metricas.json`: conserva los resultados obtenidos en la evaluación
+
+El entrenamiento también genera `docs/INFORME_AVANCE_REAL.txt`, donde podemos consultar los resultados que produjo nuestra propia ejecución
+
+Las carpetas pueden contener archivos `.gitkeep` para que GitHub las muestre mientras todavía no tienen datos generados
+
+## ¿Cómo podemos ejecutarlo en Windows?
+
+### Opción sencilla
+
+1. Entramos al [repositorio del proyecto](https://github.com/JuanFer2004/Actividad3)
+2. Seleccionamos **Code** y después **Download ZIP**
+3. Descomprimimos el archivo en una carpeta de nuestro computador
+4. Comprobamos que tenemos **Python 3.11** instalado
+5. Abrimos la carpeta y ejecutamos **`EJECUTAR_PRIMERA_PRUEBA.bat`**
+6. Cuando termine el entrenamiento, se abrirá Streamlit en el navegador, normalmente en `http://localhost:8501`
+7. Elegimos uno de los registros disponibles y pulsamos **Analizar registro**
+
+La primera ejecución necesita conexión a internet para instalar las dependencias y descargar los datos desde UCI
+
+Si ya ejecutamos el proyecto una vez, podemos abrirlo nuevamente desde **`INICIAR_EN_WINDOWS.bat`**
+
+### Opción desde la consola
+
+También podemos utilizar la terminal de Windows y ejecutar estos comandos desde la carpeta principal del proyecto
+
+```bat
 py -3.11 -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate.bat
 python -m pip install -r requirements.txt
 python scripts/descargar_datos.py
 python entrenar.py
 python -m streamlit run app/app.py
 ```
 
-> Si PowerShell bloquea la activación del entorno, usa **Símbolo del sistema (CMD)** en vez de PowerShell y escribe `.venv\Scripts\activate.bat`. O ejecuta directamente `.venv\Scripts\python.exe` sin activar el entorno.
+Si la descarga automática falla, podemos obtener los archivos desde la [página oficial de UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) y ubicarlos en `data/raw/` con los nombres `aps_failure_training_set.csv` y `aps_failure_test_set.csv`
 
-### Si falla la descarga automática
+## ¿En qué etapa vamos?
 
-Abre la [página oficial de UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks), descarga el ZIP original y extrae estos dos archivos en `data/raw/`:
+Ya organizamos el código y la estructura básica del proyecto en GitHub
 
-- `aps_failure_training_set.csv`
-- `aps_failure_test_set.csv`
+Nuestro siguiente paso es ejecutar el entrenamiento en un computador, revisar las métricas que obtengamos y comprobar que la aplicación funciona con el modelo guardado
 
-Luego ejecuta `python entrenar.py`. No edites ni reemplaces sus datos con ejemplos inventados.
+Más adelante podremos continuar con el despliegue de la aplicación en la nube
 
-## Carpeta del proyecto
+## Nuestro equipo
 
-```text
-pca-camiones/
-├── README.md                        # este instructivo
-├── .gitignore
-├── requirements.txt
-├── EJECUTAR_PRIMERA_PRUEBA.bat      # descarga + entrena + abre app
-├── INICIAR_EN_WINDOWS.bat          # abre app tras entrenamiento
-├── entrenar.py                      # entrenamiento y métricas
-├── scripts/
-│   └── descargar_datos.py           # fuente real UCI
-├── src/
-│   ├── __init__.py
-│   └── preprocessing.py             # lectura, diagnóstico y limpieza
-├── data/
-│   ├── raw/                          # CSV originales (se descargan)
-│   └── processed/                    # reservado para trabajo futuro
-├── models/
-│   ├── modelo_pca_scania.joblib      # SE GENERA tras ejecutar entrenar.py
-│   └── metricas.json                # SE GENERA tras entrenar.py
-├── notebooks/
-│   └── 01_training.ipynb            # notebook de exploración y aprendizaje
-├── app/
-│   └── app.py                        # interfaz local Streamlit
-└── docs/
-    ├── EVIDENCIAS_PARA_EL_PROFESOR.md
-    ├── SUBIR_A_GITHUB.md
-    ├── GRUPO_Actividad3_ASESORIA.txt # plantilla inicial, completar
-    └── INFORME_AVANCE_REAL.txt       # SE GENERA con los datos auténticos
-```
+Este es un proyecto que desarrollamos en grupo para la asignatura **Inteligencia Artificial I — Actividad 3**
 
-## Primera entrega: qué se presentará
+Cada integrante puede participar en el análisis, revisar el código y registrar sus aportes en el repositorio
 
-- [ ] **Modelo entrenado y serializado:** ejecutar entrenamiento y verificar que existe `.joblib` y que la app lo carga.
-- [x] **Código de la app en desarrollo:** `app/app.py`, con interfaz y predicciones.
-- [ ] **Repositorio GitHub público con estructura básica:** subir archivos con el equipo, después de realizar la prueba.
-- [ ] **Evidencia real de prueba local:** capturas del PC del estudiante, después de ejecutar la aplicación.
+**Integrantes:** pendientes de registrar por el equipo
 
-## Limitaciones y buenas prácticas
+## Licencia y fuente
 
-- **No hay métricas inventadas:** accuracy, recall y varianza PCA se calculan cuando se ejecuta el entrenamiento en datos reales.
-- PCA reduce dimensiones, pero la predicción depende del clasificador posterior. Atribuir un resultado al PCA solo sería incorrecto.
-- La clase `pos` es minoritaria (~1,7 % de entrenamiento); el accuracy por sí solo no basta. Se prioriza también **recall** y el costo de no detectar una falla.
-- No se manipulan ni se imputan etiquetas de clase. Los datos faltantes de variables se imputan **después** de separar entrenamiento y validación.
-- **Datos originales y modelo:** las versiones originales de los archivos CSV se mantienen sin cambios en `data/raw/`. El pipeline aplica transformaciones sin alterar esos archivos.
-- Las métricas y las capturas solo son evidencias **después** de ejecutar los scripts. Una captura de esta descripción no sustituye evidencia del PC.
+El código del proyecto se comparte bajo la [licencia MIT](LICENSE)
 
-## Repositorio
+La fuente de los datos es **APS Failure at Scania Trucks**, UCI Machine Learning Repository — DOI: [10.24432/C51S51](https://doi.org/10.24432/C51S51)
 
-https://github.com/JuanFer2004/Actividad3
-
-## Autores
-
-Agregar los nombres de los tres integrantes del grupo. Cada integrante debe hacer aportes reales al repositorio.
-
-## Referencia
-
-Scania, *APS Failure at Scania Trucks*, UCI Machine Learning Repository, DOI: 10.24432/C51S51. [Fuente oficial](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks).
+Repositorio: https://github.com/JuanFer2004/Actividad3
