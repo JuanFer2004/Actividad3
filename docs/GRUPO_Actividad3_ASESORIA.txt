@@ -1,5 +1,5 @@
-Grupo: [completar número verdadero del grupo]
-Integrantes: [completar tres integrantes]
+Grupo: 5
+Integrantes: Juan Fernando Bueno Torres, Santiago Camacho Parra, Jonathan Pedroza Bernal
 Actividad 3 - Entrega 1 - Asesoría de avances
 
 Título: Detección de fallas APS en camiones Scania mediante PCA
@@ -23,8 +23,8 @@ Estado del modelo:
 Estado de la aplicación:
 - Framework: Streamlit
 - Código fuente: app/app.py
-- Prueba local: PENDIENTE DE EJECUTAR Y TOMAR CAPTURAS
-- Estado de las pruebas locales: pendiente de comprobar en el computador del equipo
+- Prueba local: [PENDIENTE DE EJECUTAR Y TOMAR CAPTURAS]
+- Estado de las pruebas locales: [pendiente de comprobar en el computador del equipo]
 
 Despliegue planificado:
 - Servicio: Streamlit Community Cloud
