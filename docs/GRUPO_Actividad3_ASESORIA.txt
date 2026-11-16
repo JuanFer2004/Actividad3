@@ -24,7 +24,7 @@ Estado de la aplicación:
 - Framework: Streamlit
 - Código fuente: app/app.py
 - Prueba local: PENDIENTE DE EJECUTAR Y TOMAR CAPTURAS
-- Evidencias: AÑADIR CAPTURAS REALES DEL PC
+- Estado de las pruebas locales: pendiente de comprobar en el computador del equipo
 
 Despliegue planificado:
 - Servicio: Streamlit Community Cloud
