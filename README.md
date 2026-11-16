@@ -134,7 +134,7 @@ Este es un proyecto que desarrollamos en grupo para la asignatura **Inteligencia
 
 Cada integrante puede participar en el análisis, revisar el código y registrar sus aportes en el repositorio
 
-**Integrantes:** pendientes de registrar por el equipo
+**Integrantes:** Juan Fernando Bueno Torres, Santiago Camacho Parra, Jonathan Pedroza Bernal
 
 ## Licencia y fuente
 
