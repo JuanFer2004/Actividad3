@@ -63,7 +63,7 @@ Esta es la estructura del repositorio y la función de sus archivos principales
 
 | Archivo o carpeta | Para qué lo usamos |
 |---|---|
-| `LEADME.md` | Explica el proyecto, los datos y la forma de ejecutarlo |
+| `LÉAME.md` | Explica el proyecto, los datos y la forma de ejecutarlo |
 | `LICENSE` | Contiene la licencia MIT del repositorio |
 | `requirements.txt` | Incluye las bibliotecas de Python necesarias |
 | `.gitignore` | Evita subir archivos temporales y datos locales innecesarios |
