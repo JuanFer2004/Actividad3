@@ -59,7 +59,7 @@ El conjunto tiene más casos de la categoría `neg` que de `pos`, así que tambi
 
 ## ¿Qué hace cada archivo?
 
-Esta es la estructura del repositorio y la función de sus archivos principales
+Esta es la estructura del repositorio y la función de sus archivos principales:
 
 | Archivo o carpeta | Para qué lo usamos |
 |---|---|
@@ -80,34 +80,34 @@ Esta es la estructura del repositorio y la función de sus archivos principales
 | `models/` | Guarda el modelo entrenado y el resumen de las métricas después de ejecutarlo |
 | `docs/GRUPO_Actividad3_ASESORIA.txt` | Es nuestra plantilla con la información del avance del equipo |
 
-Dentro de `models/` se generan dos archivos importantes al entrenar
+Dentro de `models/` se generan dos archivos importantes al entrenar:
 
-- `modelo_pca_scania.joblib`: guarda el proceso de preparación de datos, PCA y clasificación para volver a utilizarlo
-- `metricas.json`: conserva los resultados obtenidos en la evaluación
+- `modelo_pca_scania.joblib`: guarda el proceso de preparación de datos, PCA y clasificación para volver a utilizarlo.
+- `metricas.json`: conserva los resultados obtenidos en la evaluación.
 
-El entrenamiento también genera `docs/INFORME_AVANCE_REAL.txt`, donde podemos consultar los resultados que produjo nuestra propia ejecución
+El entrenamiento también genera `docs/INFORME_AVANCE_REAL.txt`, donde podemos consultar los resultados que produjo nuestra propia ejecución.
 
-Las carpetas pueden contener archivos `.gitkeep` para que GitHub las muestre mientras todavía no tienen datos generados
+Las carpetas pueden contener archivos `.gitkeep` para que GitHub las muestre mientras todavía no tienen datos generados.
 
 ## ¿Cómo podemos ejecutarlo en Windows?
 
 ### Opción sencilla
 
-1. Entramos al [repositorio del proyecto](https://github.com/JuanFer2004/Actividad3)
-2. Seleccionamos **Code** y después **Download ZIP**
-3. Descomprimimos el archivo en una carpeta de nuestro computador
-4. Comprobamos que tenemos **Python 3.11** instalado
-5. Abrimos la carpeta y ejecutamos **`EJECUTAR_PRIMERA_PRUEBA.bat`**
-6. Cuando termine el entrenamiento, se abrirá Streamlit en el navegador, normalmente en `http://localhost:8501`
-7. Elegimos uno de los registros disponibles y pulsamos **Analizar registro**
+1. Entramos al [repositorio del proyecto](https://github.com/JuanFer2004/Actividad3).
+2. Seleccionamos **Code** y después **Download ZIP**.
+3. Descomprimimos el archivo en una carpeta de nuestro computador.
+4. Comprobamos que tenemos **Python 3.11** instalado.
+5. Abrimos la carpeta y ejecutamos **`EJECUTAR_PRIMERA_PRUEBA.bat`**.
+6. Cuando termine el entrenamiento, se abrirá Streamlit en el navegador, normalmente en `http://localhost:8501`.
+7. Elegimos uno de los registros disponibles y pulsamos **Analizar registro**.
 
-La primera ejecución necesita conexión a internet para instalar las dependencias y descargar los datos desde UCI
+La primera ejecución necesita conexión a internet para instalar las dependencias y descargar los datos desde UCI.
 
-Si ya ejecutamos el proyecto una vez, podemos abrirlo nuevamente desde **`INICIAR_EN_WINDOWS.bat`**
+Si ya ejecutamos el proyecto una vez, podemos abrirlo nuevamente desde **`INICIAR_EN_WINDOWS.bat`**.
 
 ### Opción desde la consola
 
-También podemos utilizar la terminal de Windows y ejecutar estos comandos desde la carpeta principal del proyecto
+También podemos utilizar la terminal de Windows y ejecutar estos comandos desde la carpeta principal del proyecto:
 
 ```bat
 py -3.11 -m venv .venv
@@ -118,28 +118,28 @@ python entrenar.py
 python -m streamlit run app/app.py
 ```
 
-Si la descarga automática falla, podemos obtener los archivos desde la [página oficial de UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) y ubicarlos en `data/raw/` con los nombres `aps_failure_training_set.csv` y `aps_failure_test_set.csv`
+Si la descarga automática falla, podemos obtener los archivos desde la [página oficial de UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) y ubicarlos en `data/raw/` con los nombres `aps_failure_training_set.csv` y `aps_failure_test_set.csv`.
 
 ## ¿En qué etapa vamos?
 
-Ya organizamos el código y la estructura básica del proyecto en GitHub
+Ya organizamos el código y la estructura básica del proyecto en GitHub.
 
-Nuestro siguiente paso es ejecutar el entrenamiento en un computador, revisar las métricas que obtengamos y comprobar que la aplicación funciona con el modelo guardado
+Nuestro siguiente paso es ejecutar el entrenamiento en un computador, revisar las métricas que obtengamos y comprobar que la aplicación funciona con el modelo guardado.
 
-Más adelante podremos continuar con el despliegue de la aplicación en la nube
+Más adelante podremos continuar con el despliegue de la aplicación en la nube.
 
 ## Nuestro equipo
 
-Este es un proyecto que desarrollamos en grupo para la asignatura **Inteligencia Artificial I — Actividad 3**
+Este es un proyecto que desarrollamos en grupo para la asignatura **Inteligencia Artificial I — Actividad 3**.
 
-Cada integrante puede participar en el análisis, revisar el código y registrar sus aportes en el repositorio
+Cada integrante puede participar en el análisis, revisar el código y registrar sus aportes en el repositorio.
 
 **Integrantes:** Juan Fernando Bueno Torres, Santiago Camacho Parra, Jonathan Pedroza Bernal
 
 ## Licencia y fuente
 
-El código del proyecto se comparte bajo la [licencia MIT](LICENSE)
+El código del proyecto se comparte bajo la [licencia MIT](LICENSE).
 
-La fuente de los datos es **APS Failure at Scania Trucks**, UCI Machine Learning Repository — DOI: [10.24432/C51S51](https://doi.org/10.24432/C51S51)
+La fuente de los datos es **APS Failure at Scania Trucks**, UCI Machine Learning Repository — DOI: [10.24432/C51S51](https://doi.org/10.24432/C51S51).
 
 Repositorio: https://github.com/JuanFer2004/Actividad3
