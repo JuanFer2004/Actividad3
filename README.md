@@ -2,28 +2,28 @@
 
 ## Nuestro proyecto
 
-En este proyecto estamos desarrollando una aplicación que nos ayude a identificar si una falla registrada en un camión Scania está relacionada con el sistema de presión de aire, conocido como **APS**
+En este proyecto estamos desarrollando una aplicación que nos ayude a identificar si una falla registrada en un camión Scania está relacionada con el sistema de presión de aire, conocido como **APS**.
 
-Queremos trabajar con información de un caso real y entender cómo preparar los datos para que un modelo de aprendizaje automático pueda utilizarlos de manera adecuada
+Queremos trabajar con información de un caso real y entender cómo preparar los datos para que un modelo de aprendizaje automático pueda utilizarlos de manera adecuada.
 
-El resultado se presenta en dos categorías
+El resultado se presenta en dos categorías:
 
-- **APS (`pos`)**: la falla registrada está relacionada con el sistema de presión de aire
-- **No APS (`neg`)**: la falla registrada corresponde a otro componente
+- **APS (`pos`)**: la falla registrada está relacionada con el sistema de presión de aire.
+- **No APS (`neg`)**: la falla registrada corresponde a otro componente.
 
-La aplicación es una herramienta de análisis académico y su resultado no reemplaza una revisión técnica del vehículo
+La aplicación es una herramienta de análisis académico y su resultado no reemplaza una revisión técnica del vehículo.
 
 ## ¿Por qué usamos PCA?
 
-Elegimos el **Análisis de Componentes Principales (PCA)** porque el conjunto de datos tiene muchas variables y queremos estudiar cómo podemos reducirlas conservando parte importante de su información
+Elegimos el **Análisis de Componentes Principales (PCA)** porque el conjunto de datos tiene muchas variables y queremos estudiar cómo podemos reducirlas conservando parte importante de su información.
 
-Primero organizamos y limpiamos los registros, después aplicamos PCA para representar los datos en **20 componentes principales** y finalmente utilizamos una regresión logística para hacer la clasificación
+Primero organizamos y limpiamos los registros, después aplicamos PCA para representar los datos en **20 componentes principales** y finalmente utilizamos una regresión logística para hacer la clasificación.
 
-Es importante distinguir las dos tareas: **PCA reduce la cantidad de variables y la regresión logística realiza la predicción**
+Es importante distinguir las dos tareas: **PCA reduce la cantidad de variables y la regresión logística realiza la predicción**.
 
 ## Datos con los que trabajamos
 
-Utilizamos el conjunto **APS Failure at Scania Trucks**, publicado en el repositorio UCI Machine Learning Repository
+Utilizamos el conjunto **APS Failure at Scania Trucks**, publicado en el repositorio UCI Machine Learning Repository.
 
 | Característica | Información |
 |---|---|
@@ -34,28 +34,28 @@ Utilizamos el conjunto **APS Failure at Scania Trucks**, publicado en el reposit
 | Tipo de información | Variables numéricas anonimizadas y una categoría de falla |
 | Fuente | [Consultar el conjunto de datos en UCI](https://archive.ics.uci.edu/dataset/421/aps+failure+at+scania+trucks) |
 
-En los archivos originales encontramos valores ausentes identificados como `na`, por eso una parte importante del trabajo consiste en revisar y preparar la información antes del entrenamiento
+En los archivos originales encontramos valores ausentes identificados como `na`, por eso una parte importante del trabajo consiste en revisar y preparar la información antes del entrenamiento.
 
-Los nombres de las variables están anonimizados, así que no podemos afirmar que cada columna corresponda a un sensor específico
+Los nombres de las variables están anonimizados, así que no podemos afirmar que cada columna corresponda a un sensor específico.
 
 ## ¿Cómo estamos trabajando los datos?
 
-Nuestro proceso está organizado en estas etapas
+Nuestro proceso está organizado en estas etapas:
 
-1. **Descarga:** obtenemos los archivos originales desde UCI
-2. **Revisión:** comprobamos cuántos registros y variables tenemos, además de los datos faltantes y posibles duplicados
-3. **Separación:** reservamos el 20 % de los datos de entrenamiento para validar los resultados y usamos el 80 % restante para ajustar el modelo
-4. **Limpieza:** identificamos las columnas con demasiados valores ausentes y rellenamos los faltantes de las columnas conservadas con la mediana
-5. **Preparación:** estandarizamos las variables para que sus escalas sean comparables
-6. **PCA:** reducimos las variables a 20 componentes y calculamos cuánta información conservan
-7. **Clasificación:** entrenamos una regresión logística y evaluamos sus resultados
-8. **Aplicación:** utilizamos el modelo guardado para analizar registros desde una interfaz sencilla
+1. **Descarga:** obtenemos los archivos originales desde UCI.
+2. **Revisión:** comprobamos cuántos registros y variables tenemos, además de los datos faltantes y posibles duplicados.
+3. **Separación:** reservamos el 20 % de los datos de entrenamiento para validar los resultados y usamos el 80 % restante para ajustar el modelo.
+4. **Limpieza:** identificamos las columnas con demasiados valores ausentes y rellenamos los faltantes de las columnas conservadas con la mediana.
+5. **Preparación:** estandarizamos las variables para que sus escalas sean comparables.
+6. **PCA:** reducimos las variables a 20 componentes y calculamos cuánta información conservan.
+7. **Clasificación:** entrenamos una regresión logística y evaluamos sus resultados.
+8. **Aplicación:** utilizamos el modelo guardado para analizar registros desde una interfaz sencilla.
 
-Para revisar la calidad del modelo calculamos métricas como precisión, recall, F1 y accuracy, además de la matriz de confusión
+Para revisar la calidad del modelo calculamos métricas como precisión, recall, F1 y accuracy, además de la matriz de confusión.
 
-El conjunto tiene más casos de la categoría `neg` que de `pos`, así que también prestamos atención a las fallas que el sistema podría pasar por alto
+El conjunto tiene más casos de la categoría `neg` que de `pos`, así que también prestamos atención a las fallas que el sistema podría pasar por alto.
 
-**Los valores de las métricas se obtienen al ejecutar el entrenamiento**, no aparecen como resultados definitivos en este documento
+**Los valores de las métricas se obtienen al ejecutar el entrenamiento**, no aparecen como resultados definitivos en este documento.
 
 ## ¿Qué hace cada archivo?
 
